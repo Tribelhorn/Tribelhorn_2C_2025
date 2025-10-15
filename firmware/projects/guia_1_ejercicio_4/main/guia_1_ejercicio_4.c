@@ -53,12 +53,12 @@
  */
 void convertToBcdArray (uint32_t data, uint8_t digits, uint8_t * bcd_number) {
 
-    for (int i = (digits-1); i > -1; i--) {			 // Recorre el arreglo desde el final 
-        uint32_t dato_sobre_10 = data / 10;          // Divide el número por 10
-        uint32_t dato_entero = dato_sobre_10 * 10;   // Obtiene la parte entera multiplicando por 10 para truncarlo
-        uint8_t digito = data - dato_entero;         // Se hace la diferencia para obtener el dígito menos significativo
-        *(bcd_number + i) = digito;                  // Guarda el dígito en el arreglo
-        data = dato_sobre_10;                        // Cambia el dato para la siguiente iteración
+    for (int i = (digits-1); i > -1; i--) {			 // Recorre el arreglo desde el final //
+        uint32_t dato_sobre_10 = data / 10;          // Divide el número por 10 //
+        uint32_t dato_entero = dato_sobre_10 * 10;   // Obtiene la parte entera multiplicando por 10 para truncarlo //
+        uint8_t digito = data - dato_entero;         // Se hace la diferencia para obtener el dígito menos significativo //
+        *(bcd_number + i) = digito;                  // Guarda el dígito en el arreglo //
+        data = dato_sobre_10;                        // Cambia el dato para la siguiente iteración //
     }
 }
 
@@ -67,7 +67,7 @@ void convertToBcdArray (uint32_t data, uint8_t digits, uint8_t * bcd_number) {
 void app_main(void){
 	uint32_t data=123;
 	uint8_t num_digitos=3;
-	uint8_t digitos[num_digitos];
+	uint8_t digitos[num_digitos];                   //Crea una lista de num_digitos de largo//
 	convertToBcdArray(data, num_digitos, digitos);
 	for (int i=0; i<num_digitos; i++) {
 		printf("%d\n", digitos[i]);

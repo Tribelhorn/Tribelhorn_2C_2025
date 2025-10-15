@@ -33,7 +33,7 @@
 #define OFF 2
 #define TOGGLE 3
 
-#define CONFIG_BLINK_PERIOD 100
+#define CONFIG_BLINK_PERIOD 100	//Recomendado en la guia//
 
 
 /*==================[internal data definition]===============================*/
@@ -46,9 +46,9 @@ struct leds {
 
 
 /*==================[internal functions declaration]=========================*/
-void funcion_led(struct leds *ptr_struct) {
-	uint16_t retardo = (ptr_struct->periodo)/100;
-	LedsInit();  {
+void funcion_led(struct leds *ptr_struct) {			//Recibe una struct leds//
+	uint16_t retardo = (ptr_struct->periodo)/100;	//Define el retardo como el periodo sobre 100//
+	LedsInit();  {									//Inicializa los leds(debió hacerse en app_main)//
 		if (ptr_struct->mode == ON) { 
 			switch (ptr_struct->n_led) {
 				case 1:
@@ -108,8 +108,8 @@ void funcion_led(struct leds *ptr_struct) {
 						break;
 					};
 
-				for (int j=0; j < (retardo); j++) {
-					vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+				for (int j=0; j < (retardo); j++) {							//Pasa el retardo en los ms que se indique en periodo//
+					vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);	
 				}
 			}
 		}
@@ -117,11 +117,12 @@ void funcion_led(struct leds *ptr_struct) {
 	}
 }
 ;
-
+in
 /*==================[external functions definition]==========================*/
 void app_main(void) {
 
-	my_leds.mode = 3;
+	//Defino los parametros de la struct//
+	my_leds.mode = 3;	
 	my_leds.n_led = 1;
 	my_leds.n_ciclos = 10;
 	my_leds.periodo = 500;

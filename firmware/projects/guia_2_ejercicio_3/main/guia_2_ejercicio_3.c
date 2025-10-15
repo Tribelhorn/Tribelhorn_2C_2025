@@ -35,13 +35,16 @@
 #include "lcditse0803.h"
 #include "hc_sr04.h"
 #include "timer_mcu.h"
-#include "uart_mcu.h"
+//#include "uart_mcu.h"//
 
 
 
 /*==================[macros and definitions]=================================*/
 
 #define CONFIG_BLINK_PERIOD_LED_1_US 1000000
+
+#define ONOFF 79
+#define HOLD 72
 
 /*==================[internal data definition]===============================*/
 
@@ -60,21 +63,21 @@ TaskHandle_t mostrar_task_handle = NULL;
 
 static void tarea_medir(void *pvParameter) {
 	while (1) {
-		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);			//La tarea espera la notificación, pdTRUE//
 		if (FLAG_1) {
-			DISTANCIA = HcSr04ReadDistanceInCentimeters();	/* El sensor toma la distancia */
+			DISTANCIA = HcSr04ReadDistanceInCentimeters();	// El sensor toma la distancia //
 		}
 
 		else {
-			DISTANCIA = 0;									/* Si la bandera está apagada */
+			DISTANCIA = 0;									// Si la bandera está apagada //
 		}
 	}
 };
 
 static void tarea_mostrar(void *pvParameter) {
 	while (1){
-		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-		if (DISTANCIA > 30)	{								/* EValua si la distancia es mayor a DISTANCIA */
+		ulTaskNotifyTake(pdTRUE, portMAX_DELAY);			
+		if (DISTANCIA > 30)	{								// EValua si la distancia es mayor a DISTANCIA //
 			LedOn(LED_1);
 			LedOn(LED_2);			
 			LedOn(LED_3);
@@ -99,23 +102,37 @@ static void tarea_mostrar(void *pvParameter) {
 		}
 
 		if (FLAG_2){
-			LcdItsE0803Write(DISTANCIA);				/* Si la flag 2 está encendida actualiza la distancia en el LCD */
+			LcdItsE0803Write(DISTANCIA);				// Si la flag 2 está encendida actualiza la distancia en el LCD //
 		}
 	}
-}
+};
 
 void leer_boton_1() {
-	FLAG_1 = !FLAG_1;									/* Niega la bandera actual */			
+	FLAG_1 = !FLAG_1;									// Niega la bandera actual //			
 };
 
 void leer_boton_2() {
-	FLAG_2 = !FLAG_2;									/* Niega la bandera actual */
+	FLAG_2 = !FLAG_2;									// Niega la bandera actual //
 };
 
 void Fun_Timer(void* param){
-    vTaskNotifyGiveFromISR(medir_task_handle, pdFALSE);		/* Envía una notificación a la tarea asociada a medir */
-	vTaskNotifyGiveFromISR(mostrar_task_handle, pdFALSE);	/* Envía una notificación a la tarea asociada a mostrar */
+    vTaskNotifyGiveFromISR(medir_task_handle, pdFALSE);		// Envía una notificación a la tarea asociada a medir //
+	vTaskNotifyGiveFromISR(mostrar_task_handle, pdFALSE);	// Envía una notificación a la tarea asociada a mostrar //
 };
+
+// void Func_Uart(void* param) {
+// 	uint8_t caracter;
+// 	UartReadByte (UART_PC, &caracter);
+// 	switch (caracter) {
+// 		case ONOFF:
+// 			FLAG_1 = !FLAG_1;												
+// 			break;
+	
+// 		case HOLD:
+// 			FLAG_2 = !FLAG_2;											
+// 			break;
+// 	}
+// };	
 
 
 /*==================[external functions definition]==========================*/
@@ -126,10 +143,18 @@ void app_main(void) {
 	LedsInit();
 	LcdItsE0803Init();
 	SwitchesInit();
-	UartInit();
+
+	// serial_config_t puerto = {
+	// 	.port = UART_PC,			//Para comunicarse por el UART-USB//
+	// 	.baud_rate = 9600,		
+	// 	.func_p = Func_Uart,			//Ésta función se ejecutará cada vez llegue unn dato//
+	// 	.param_p = NULL
+	// };
+
+	//UartInit(&puerto);//
 
 	xTaskCreate(&tarea_medir, "Medir", 512, NULL, 5, &medir_task_handle); 			//El 5 es la prioridad//
-    xTaskCreate(&tarea_mostrar, "Mostrar", 512, NULL, 5, &mostrar_task_handle);		////
+    xTaskCreate(&tarea_mostrar, "Mostrar", 512, NULL, 5, &mostrar_task_handle);		
 
 	timer_config_t timer_1 = {
         .timer = TIMER_A,
@@ -140,7 +165,7 @@ void app_main(void) {
 
     TimerInit(&timer_1);
 
-    												/* Inicialización del conteo de timers */
+    												// Inicialización del conteo de timers //
     TimerStart(timer_1.timer);
 
 	SwitchActivInt(SWITCH_1, leer_boton_1, NULL);

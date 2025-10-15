@@ -33,12 +33,12 @@ void app_main(void){
 	uint8_t teclas;
 	LedsInit();
 	SwitchesInit();
-    while(1)    {
-    	teclas  = SwitchesRead();
+    while(1)    {					//Bucle infinito//
+    	teclas  = SwitchesRead();	//Lee el valor 1 en el switch que corresponda y lo guarda en teclas contempla el caso de presionar los 2//
     	switch(teclas){
     		case SWITCH_1:
-    			LedToggle(LED_1);
-				vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);
+    			LedToggle(LED_1);										
+				vTaskDelay(CONFIG_BLINK_PERIOD / portTICK_PERIOD_MS);	//portTICK Convierte ms en ticks//
     		break;
     		case SWITCH_2:
     			LedToggle(LED_2);

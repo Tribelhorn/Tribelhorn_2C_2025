@@ -41,13 +41,13 @@
 
 /*==================[internal data definition]===============================*/
 
-uint8_t FLAG_1 = 0;
+uint8_t FLAG_1 = 0;		//Bandera de encendido/apagado //
 
-uint8_t FLAG_2 = 1;
+uint8_t FLAG_2 = 1;		//Bandera de holdeo//
 
-uint16_t DISTANCIA = 0;
+uint16_t DISTANCIA = 0;	
 
-TaskHandle_t medir_task_handle = NULL;
+TaskHandle_t medir_task_handle = NULL;			//Manejadores de tarea para suspenderlas, borrarlas o renaudarlas
 TaskHandle_t mostrar_task_handle = NULL;
 TaskHandle_t leer_boton_task_handle = NULL;
 
@@ -69,10 +69,10 @@ static void tarea_medir(void *pvParameter) {
 	}
 };
 
-static void tarea_mostrar(void *pvParameter) {
+static void tarea_mostrar(void *pvParameter) {				//static restringe el axceso a la funcion solo dentro de éste archivo//
 	while (1){
 
-		if (DISTANCIA > 30)	{								/* EValua si la distancia es mayor a DISTANCIA */
+		if (DISTANCIA > 30)	{								/* EValua según la consigna */
 			LedOn(LED_1);
 			LedOn(LED_2);			
 			LedOn(LED_3);
@@ -104,7 +104,7 @@ static void tarea_mostrar(void *pvParameter) {
 	}
 };
 
-static void tarea_leer_boton(void *pvParameter) {
+static void tarea_leer_boton(void *pvParameter) {		//pvParameters le permite a la tarea recibir datos genéricos//
 	while (1) {
 		uint8_t teclas = SwitchesRead();					/* Lee las teclas */
 		switch(teclas){
@@ -131,9 +131,9 @@ void app_main(void) {
 	LedsInit();
 	LcdItsE0803Init();
 	SwitchesInit();
-	xTaskCreate(&tarea_medir, "Medir", 512, NULL, 5, NULL);
-    xTaskCreate(&tarea_mostrar, "Mostrar", 512, NULL, 5, NULL);
-    xTaskCreate(&tarea_leer_boton, "Leer Boton", 512, NULL, 5, NULL);
+	xTaskCreate(&tarea_medir, "Medir", 512, NULL, 5, NULL);				//512 es el espacio que se le destina en memoria//
+    xTaskCreate(&tarea_mostrar, "Mostrar", 512, NULL, 5, NULL);			//Se pone NULL porque no se va a interrumpir ni borrar//
+    xTaskCreate(&tarea_leer_boton, "Leer Boton", 512, NULL, 5, NULL);	
 }
 
 /*==================[end of file]============================================*/

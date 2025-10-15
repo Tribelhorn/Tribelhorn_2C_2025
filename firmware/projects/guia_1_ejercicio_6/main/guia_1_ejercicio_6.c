@@ -35,9 +35,9 @@ typedef struct
 	io_t dir;			/*!< GPIO direction '0' IN;  '1' OUT*/
 } gpioConf_t;
 
-gpioConf_t gpios_lcd[4];
+gpioConf_t gpios_lcd[4];    
 
-gpioConf_t gpios_multiplexor[3];
+gpioConf_t gpios_multiplexor[3];    //Se define otra lista con 3 structs//
 
 /*==================[internal data definition]===============================*/
 
@@ -155,7 +155,7 @@ void mostrarNum(gpioConf_t* gpio_digito, gpioConf_t* gpio_mux, uint32_t numero, 
     // Muestra cada dígito en su correspondiente multiplexor
     escribirGPIO(arreglo[0], gpio_digito);
     GPIOOn(gpio_mux[2].pin);	// Multiplexa el digito en el display
-    GPIOOff(gpio_mux[2].pin);
+    GPIOOff(gpio_mux[2].pin);   
 
     escribirGPIO(arreglo[1], gpio_digito);
     GPIOOn(gpio_mux[1].pin);
@@ -168,7 +168,7 @@ void mostrarNum(gpioConf_t* gpio_digito, gpioConf_t* gpio_mux, uint32_t numero, 
 
 /*==================[external functions definition]==========================*/
 void app_main(void){
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {           //Setea los GPIO como salidas //
 		gpios_lcd[i].dir = GPIO_OUTPUT;
 	};
 
@@ -176,7 +176,7 @@ void app_main(void){
 		gpios_multiplexor[i].dir = GPIO_OUTPUT;
 	};
 
-	gpios_lcd[0].pin = GPIO_20;
+	gpios_lcd[0].pin = GPIO_20;             //Cada GPIO se mapea como se indica en la guia//
 	gpios_lcd[1].pin = GPIO_21;
 	gpios_lcd[2].pin = GPIO_22;
 	gpios_lcd[3].pin = GPIO_23;

@@ -36,7 +36,7 @@ typedef struct
 	io_t dir;			/*!< GPIO direction '0' IN;  '1' OUT*/
 } gpioConf_t;
 
-gpioConf_t gpios_lcd[4];
+gpioConf_t gpios_lcd[4]; //Define una lista con 4 structs//
 
 
 /*==================[internal data definition]===============================*/
@@ -69,12 +69,12 @@ gpioConf_t gpios_lcd[4];
 void escribirGPIO(uint8_t bcd, gpioConf_t* gpios) {
 
     for (int i = 0; i < 4; i++) {			   
-        GPIOInit(gpios[i].pin, gpios[i].dir);  // Inicializa el pin
+        GPIOInit(gpios[i].pin, gpios[i].dir);  // Inicializa el pin //
 
-        if (bcd & (1 << i)) {                  // Recorre cada bit del bcd preguntando si está en 1
-            GPIOOn(gpios[i].pin);              // Enciende el pin
-        } else {                               // Si el bit i está en 0
-            GPIOOff(gpios[i].pin);             // Apaga el pin
+        if (bcd & (1 << i)) {                  // Recorre cada bit del bcd preguntando si está en 1 //
+            GPIOOn(gpios[i].pin);              // Enciende el pin //
+        } else {                               // Si el bit i está en 0 //
+            GPIOOff(gpios[i].pin);             // Apaga el pin //
         }
     }
 }
@@ -83,18 +83,18 @@ void escribirGPIO(uint8_t bcd, gpioConf_t* gpios) {
 
 void app_main(void) {
 
-	for (int i = 0; i < 4; i++) {
-		gpios_lcd[i].dir = GPIO_OUTPUT;
+	for (int i = 0; i < 4; i++) {			//Recorre los 4 structs//
+		gpios_lcd[i].dir = GPIO_OUTPUT;		//Define cada dir como salida//
 	};
 
-	gpios_lcd[0].pin = GPIO_20;
+	gpios_lcd[0].pin = GPIO_20;				//Cada GPIO se mapea como se indica en la guia//
 	gpios_lcd[1].pin = GPIO_21;
 	gpios_lcd[2].pin = GPIO_22;
 	gpios_lcd[3].pin = GPIO_23;
 
-	uint32_t numero = 7;
+	uint32_t numero = 7;					//numero de prueba//
 
-	escribirGPIO(numero, gpios_lcd);
+	escribirGPIO(numero, gpios_lcd);		
 }
 
 /*==================[end of file]============================================*/
